@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../controller/login_controller.dart';
 
 class PrefData {
-  static String prefName = "com.example.ebook_app";
+  static String prefName = "com.example.ebook";
 
   static String isIntro = "${prefName}isIntro";
   static String isDetailed = "${prefName}isDetailed";
@@ -23,47 +23,36 @@ class PrefData {
   static String isBack = "${prefName}isBack";
   static String inForeground = "${prefName}inForeground";
 
-
-
-
   static setIsBack(bool sizes) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool(isBack, sizes);
   }
-
 
   static getIsBack() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getBool(isBack) ?? false;
   }
 
+  static Future<void> setStoryId(String sizes) async {
+    print("string---------${sizes}");
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(storyId, sizes);
+  }
 
-    static Future<void>  setStoryId(String sizes) async {
+  static getStoryId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(storyId) ?? "";
+  }
 
-      print("string---------${sizes}");
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString(storyId, sizes);
-    }
+  static setLink(String sizes) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(link, sizes);
+  }
 
-
-    static getStoryId() async {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      return prefs.getString(storyId) ?? "";
-    }
-
-    static setLink(String sizes) async {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString(link, sizes);
-    }
-
-
-    static getLink() async {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      return prefs.getString(link) ?? "";
-    }
-
-
-
+  static getLink() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(link) ?? "";
+  }
 
   static Future<bool> getInForeground() async {
     SharedPreferences? prefs = await SharedPreferences.getInstance();
@@ -76,26 +65,20 @@ class PrefData {
     prefs.setBool(inForeground, sizes);
   }
 
-
-
-  static Future<String>  getUserId()async{
+  static Future<String> getUserId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     String id = prefs.getString(LoginController.keyCurrentUser) ?? '';
 
     return id;
-
   }
 
-
-  static Future<bool>  getLogin() async {
-
+  static Future<bool> getLogin() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     bool id = prefs.getBool(LoginController.keyLogin) ?? false;
 
     return id;
-
   }
 
   static setIsIntro(bool sizes) async {
@@ -119,7 +102,7 @@ class PrefData {
     return prefs.getBool(isDetailed) ?? true;
   }
 
-  static setIsHome(bool home)async{
+  static setIsHome(bool home) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool(homeScreen, home);
   }
@@ -129,12 +112,12 @@ class PrefData {
     return prefs.getBool(homeScreen) ?? true;
   }
 
-  static setBannerId(String id)async{
+  static setBannerId(String id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(bannerId, id);
   }
 
-  static setIosBannerId(String id)async{
+  static setIosBannerId(String id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(iosBannerId, id);
   }
@@ -143,16 +126,18 @@ class PrefData {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(bannerId) ?? "";
   }
+
   static getIosBannerId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(iosBannerId) ?? "";
   }
 
-  static setInterstitialId(String id)async{
+  static setInterstitialId(String id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(interstitialId, id);
   }
-  static setIosInterstitialId(String id)async{
+
+  static setIosInterstitialId(String id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(iosInterstitialId, id);
   }
@@ -160,17 +145,19 @@ class PrefData {
   static getInterstitialId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(interstitialId) ?? "";
-  } static getIosInterstitialId() async {
+  }
+
+  static getIosInterstitialId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(iosInterstitialId) ?? "";
   }
 
-
-  static setRecentReadBook(String book)async{
+  static setRecentReadBook(String book) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(recentRead, book);
   }
-  static setRecentReadBookName(String name)async{
+
+  static setRecentReadBookName(String name) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(recentReadName, name);
   }
@@ -189,7 +176,7 @@ class PrefData {
 
   static Future<List<String>> getFavouriteList() async {
     SharedPreferences? prefs = await SharedPreferences.getInstance();
-    List<String>? value = prefs.getStringList(favouriteList) ;
+    List<String>? value = prefs.getStringList(favouriteList);
     return value ?? [];
   }
 
@@ -202,7 +189,7 @@ class PrefData {
 
   static Future<List<String>> getRecentList() async {
     SharedPreferences? prefs = await SharedPreferences.getInstance();
-    List<String>? value = prefs.getStringList(recentList) ;
+    List<String>? value = prefs.getStringList(recentList);
     return value ?? [];
   }
 
@@ -215,7 +202,7 @@ class PrefData {
 
   static Future<List<String>> getBookMarkList() async {
     SharedPreferences? prefs = await SharedPreferences.getInstance();
-    List<String>? value = prefs.getStringList(bookMarkList) ;
+    List<String>? value = prefs.getStringList(bookMarkList);
     return value ?? [];
   }
 
@@ -224,19 +211,16 @@ class PrefData {
     prefs.setStringList(bookMarkList, sizes);
   }
 
-
-  static setAppIcon(String icon)async{
+  static setAppIcon(String icon) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(appIcon, icon);
   }
 
-
   static String recentSearchList = "recentSearchList";
-
 
   static Future<List<String>> getRecentSearchList() async {
     SharedPreferences? prefs = await SharedPreferences.getInstance();
-    List<String>? value = prefs.getStringList(recentSearchList) ;
+    List<String>? value = prefs.getStringList(recentSearchList);
     return value ?? [];
   }
 
@@ -244,7 +228,4 @@ class PrefData {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setStringList(recentSearchList, sizes);
   }
-
-
-
 }

@@ -1,5 +1,3 @@
-
-
 // import 'dart:async';
 // import 'dart:convert';
 //
@@ -66,7 +64,7 @@
 //     return;
 //   }
 //   channel = const AndroidNotificationChannel(
-//     'com.example.ebook_app', // id
+//     'com.example.ebook', // id
 //     'High Importance Notifications', // title
 //     description:
 //     'This channel is used for important notifications.', // description
@@ -116,7 +114,7 @@
 //     //   notification.body,
 //     //   NotificationDetails(
 //     //     android: AndroidNotificationDetails(
-//     //       'com.example.ebook_app',
+//     //       'com.example.ebook',
 //     //       channel.name,
 //     //       channelDescription: channel.description,
 //     //       // TODO add a proper drawable resource to android, for now using
@@ -477,7 +475,6 @@
 //   }
 // }
 
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -506,23 +503,22 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'controller/net_check_cont.dart';
 import 'models/book_list_model.dart';
 
- FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-FlutterLocalNotificationsPlugin();
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 final StreamController<ReceivedNotification> didReceiveLocalNotificationStream =
-StreamController<ReceivedNotification>.broadcast();
+    StreamController<ReceivedNotification>.broadcast();
 
 final StreamController<String?> selectNotificationStream =
-StreamController<String?>.broadcast();
-
+    StreamController<String?>.broadcast();
 
 final StreamController<Map<String, dynamic>?> onClickStream =
-StreamController<Map<String, dynamic>?>.broadcast();
+    StreamController<Map<String, dynamic>?>.broadcast();
 
 const String darwinNotificationCategoryPlain = 'plainCategory';
 
 const MethodChannel platform =
-MethodChannel('dexterx.dev/flutter_local_notifications_example');
+    MethodChannel('dexterx.dev/flutter_local_notifications_example');
 
 const String portName = 'notification_send_port';
 
@@ -555,7 +551,6 @@ const String navigationActionId = 'id_3';
 
 @pragma('vm:entry-point')
 void notificationTapBackground(NotificationResponse notificationResponse) {
-
   print("called------tapBackground");
   print('notification(${notificationResponse.id}) action tapped: '
       '${notificationResponse.actionId} with'
@@ -564,26 +559,21 @@ void notificationTapBackground(NotificationResponse notificationResponse) {
 
   _configureSelectNotificationSubject();
   _configureDidReceiveLocalNotificationSubject();
-
 }
-
-
 
 @pragma('vm:entry-point')
 Future<void> backgroundHandler(RemoteMessage message) async {
-
   await Firebase.initializeApp();
 
   print("object-------called");
 
-  print("dataOpen===${message.data}===${message.notification!.android!.clickAction}====${message.notification!.body}===");
+  print(
+      "dataOpen===${message.data}===${message.notification!.android!.clickAction}====${message.notification!.body}===");
 
-
-  if(message.data["story_id"]!=null){
+  if (message.data["story_id"] != null) {
     print("sroryZI------1111${message.data["story_id"]}");
     // PrefData.setStoryId(message.data["story_id"]);
   }
-
 
   // if(message.data.isNotEmpty && message.notification!.android!.clickAction!.isNotEmpty) {
   //
@@ -618,9 +608,8 @@ Future<void> backgroundHandler(RemoteMessage message) async {
   //
   // }
 
-
-
-  print("dataOpen12121212121===${message.data}===${message.notification}====${message.notification!.body}===");
+  print(
+      "dataOpen12121212121===${message.data}===${message.notification}====${message.notification!.body}===");
 
   print(" ");
 
@@ -635,18 +624,14 @@ Future<void> backgroundHandler(RemoteMessage message) async {
 
   print("data---------${message.data.toString()}");
   print("data1111---------${message.notification!.title}");
-
-
 }
 
-
 setupFlutterNotifications() async {
-
   channel = const AndroidNotificationChannel(
-    'com.example.ebook_app', // id
+    'com.example.ebook', // id
     'High Importance Notifications', // title
     description:
-    'This channel is used for important notifications.', // description
+        'This channel is used for important notifications.', // description
     importance: Importance.high,
   );
 
@@ -658,7 +643,7 @@ setupFlutterNotifications() async {
   /// default FCM channel to enable heads up notifications.
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
-      AndroidFlutterLocalNotificationsPlugin>()
+          AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(channel);
 
   /// Update the iOS foreground notification presentation options to allow
@@ -668,13 +653,11 @@ setupFlutterNotifications() async {
     badge: true,
     sound: true,
   );
-
 }
 
-
 // bool isAppBg = false;
- AndroidNotificationChannel channel = AndroidNotificationChannel(
-    "com.example.ebook_app", "big text channel name",
+AndroidNotificationChannel channel = AndroidNotificationChannel(
+    "com.example.ebook", "big text channel name",
     importance: Importance.high, playSound: true);
 
 Future<void> main() async {
@@ -682,32 +665,24 @@ Future<void> main() async {
 
   MobileAds.instance.initialize();
 
-  if(kIsWeb){
-
+  if (kIsWeb) {
     await Firebase.initializeApp(
         options: const FirebaseOptions(
-            apiKey: "AIzaSyDbVIRvP2P72LktDtHY0HnfoKzBwfXqZFA",
-            authDomain: "e-book-a4896.firebaseapp.com",
-            projectId: "e-book-a4896",
-            storageBucket: "e-book-a4896.appspot.com",
-            messagingSenderId: "1043346652466",
-            appId: "1:1043346652466:web:7579322e78fbfb0f8e2b2b",
-            measurementId: "G-VERWQ13CLQ"
-        )
-    );
+      apiKey: "AIzaSyBZITKH9BMhc5zHkTVUFa843P_CG4Ys_Eg",
+      authDomain: "ebook-4d358.firebaseapp.com",
+      projectId: "ebook-4d358",
+      storageBucket: "ebook-4d358.appspot.com",
+      messagingSenderId: "52319249413",
+      appId: "1:52319249413:web:078a67869a1d175e61286c",
+      measurementId: "G-KX0SWDPN8N",
+    ));
 
     await FirebaseMessaging.instance.setAutoInitEnabled(false);
-
-
-
 
     requestPermissions();
 
     runApp(MyApp());
-
-  }else{
-
-
+  } else {
     WidgetsFlutterBinding.ensureInitialized();
 
     await Firebase.initializeApp();
@@ -718,65 +693,48 @@ Future<void> main() async {
     //
     // FireBaseData.addToken(token ?? "");
 
-
     FirebaseMessaging.onBackgroundMessage(backgroundHandler);
 
     FirebaseMessaging messages = FirebaseMessaging.instance;
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
-
       print("routeFromMessageOpen---_${message.data}");
 
       // final routeFromMessage = message.data[""];
 
-      if(message.data.isNotEmpty){
-
-
+      if (message.data.isNotEmpty) {
         print("sroryZI------${message.data["story_id"]}");
 
         print("link--------${message.data["link"]}");
 
-
-        if(message.data["story_id"]!=null){
-
+        if (message.data["story_id"] != null) {
           await PrefData.setStoryId(message.data["story_id"]);
-
         }
 
-        if (message.data["link"]!=null){
-
-
+        if (message.data["link"] != null) {
           print("setLink--------${message.data["link"]}");
 
           PrefData.setLink(message.data["link"]);
 
           // Constant.launchURL(message.notification!.android!.link!);
         }
-
-
       }
-
-
-
-
-
-
-
-
     });
 
     messages.requestPermission();
 
     await _configureLocalTimeZone();
 
-    await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()?.createNotificationChannel(channel);
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
 
     const AndroidInitializationSettings initializationSettingsAndroid =
-    AndroidInitializationSettings('@mipmap/ic_launcher');
+        AndroidInitializationSettings('@mipmap/ic_launcher');
 
     final DarwinInitializationSettings initializationSettingsDarwin =
-    DarwinInitializationSettings(
+        DarwinInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: false,
       requestSoundPermission: false,
@@ -800,7 +758,8 @@ Future<void> main() async {
     //   defaultIcon: AssetsLinuxIcon('icons/app_icon.png'),
     // );
 
-    final InitializationSettings initializationSettings = InitializationSettings(
+    final InitializationSettings initializationSettings =
+        InitializationSettings(
       android: initializationSettingsAndroid,
       iOS: initializationSettingsDarwin,
       macOS: initializationSettingsDarwin,
@@ -810,8 +769,6 @@ Future<void> main() async {
       initializationSettings,
       onDidReceiveNotificationResponse:
           (NotificationResponse notificationResponse) {
-
-
         print("selectNotification===true");
 
         selectNotificationStream.add(notificationResponse.payload);
@@ -828,7 +785,6 @@ Future<void> main() async {
             break;
         }
       },
-
       onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
     );
 
@@ -840,21 +796,23 @@ Future<void> main() async {
       sound: true,
     );
 
-    final RemoteMessage? message = await FirebaseMessaging.instance.getInitialMessage();
+    final RemoteMessage? message =
+        await FirebaseMessaging.instance.getInitialMessage();
 
     await FlutterDownloader.initialize(
         debug: true,
         // optional: set to false to disable printing logs to console (default: true)
-        ignoreSsl: true // option: set to false to disable working with http links (default: false)
-    );
-    runApp(MyApp(message: message,));
-
+        ignoreSsl:
+            true // option: set to false to disable working with http links (default: false)
+        );
+    runApp(MyApp(
+      message: message,
+    ));
   }
-
 }
+
 //
 GetXNetworkManager networkManager = Get.put(GetXNetworkManager());
-
 
 Future<void> _configureLocalTimeZone() async {
   if (kIsWeb || Platform.isLinux) {
@@ -894,28 +852,26 @@ Future<void> _showNotificationWithImage(RemoteMessage message) async {
       message.notification!.android!.imageUrl!, 'bigPicture');
 
   final BigPictureStyleInformation bigPictureStyleInformation =
-  BigPictureStyleInformation(FilePathAndroidBitmap(bigPicturePath),
-      largeIcon: FilePathAndroidBitmap(largeIconPath),
-      contentTitle: message.notification!.title,
-      htmlFormatContentTitle: true,
-      summaryText: message.notification!.body!,
-      htmlFormatSummaryText: true);
+      BigPictureStyleInformation(FilePathAndroidBitmap(bigPicturePath),
+          largeIcon: FilePathAndroidBitmap(largeIconPath),
+          contentTitle: message.notification!.title,
+          htmlFormatContentTitle: true,
+          summaryText: message.notification!.body!,
+          htmlFormatSummaryText: true);
 
   final AndroidNotificationDetails androidNotificationDetails =
-  AndroidNotificationDetails('com.example.ebook_app', 'big text channel name',
-      channelDescription: 'big text channel description',
-      styleInformation: bigPictureStyleInformation);
+      AndroidNotificationDetails('com.example.ebook', 'big text channel name',
+          channelDescription: 'big text channel description',
+          styleInformation: bigPictureStyleInformation);
 
   const DarwinNotificationDetails iosNotificationDetails =
-  DarwinNotificationDetails(
+      DarwinNotificationDetails(
     categoryIdentifier: darwinNotificationCategoryPlain,
-
     presentAlert: true,
-
   );
 
-  final NotificationDetails notificationDetails =
-  NotificationDetails(android: androidNotificationDetails,iOS: iosNotificationDetails);
+  final NotificationDetails notificationDetails = NotificationDetails(
+      android: androidNotificationDetails, iOS: iosNotificationDetails);
   await flutterLocalNotificationsPlugin.show(1, message.notification!.title,
       message.notification!.body!, notificationDetails,
       payload: payload);
@@ -925,10 +881,10 @@ Future<void> _showNotificationWithImage(RemoteMessage message) async {
   _configureDidReceiveLocalNotificationSubject();
 }
 
-NotificationTabController notificationTabController = Get.put(NotificationTabController());
+NotificationTabController notificationTabController =
+    Get.put(NotificationTabController());
 
 Future<void> _showNotification(RemoteMessage message) async {
-
   Map mapData = {
     "link": message.notification!.android!.link,
     "action": message.notification!.android!.clickAction,
@@ -937,27 +893,25 @@ Future<void> _showNotification(RemoteMessage message) async {
 
   String payload = json.encode(mapData);
   const AndroidNotificationDetails androidNotificationDetails =
-  AndroidNotificationDetails(
-    'com.example.ebook_app',
+      AndroidNotificationDetails(
+    'com.example.ebook',
     'big text channel name',
     channelDescription: 'big text channel description',
     importance: Importance.max,
     priority: Priority.high,
   );
 
-
   const DarwinNotificationDetails iosNotificationDetails =
-  DarwinNotificationDetails(
+      DarwinNotificationDetails(
     categoryIdentifier: darwinNotificationCategoryPlain,
   );
-  const NotificationDetails notificationDetails =
-  NotificationDetails(android: androidNotificationDetails,
-      iOS: iosNotificationDetails
-  );
+  const NotificationDetails notificationDetails = NotificationDetails(
+      android: androidNotificationDetails, iOS: iosNotificationDetails);
   await flutterLocalNotificationsPlugin.show(1, message.notification!.title,
       message.notification!.body!, notificationDetails,
       payload: payload);
 }
+
 //
 void _configureDidReceiveLocalNotificationSubject() {
   print("receive---true");
@@ -974,16 +928,15 @@ void _configureDidReceiveLocalNotificationSubject() {
       String link = payload["link"];
 
       Constant.launchURL(link);
-
     } else if (action == "FLUTTER_NOTIFICATION_CLICK_STORY") {
       String storyId = payload["storyId"];
 
       StoryModel? story = await FireBaseData.fetchStory(storyId);
 
       print("story--------------${story!.id}");
-        Get.to(PopularBookDetailScreen(
-          storyModel: story,
-        ));
+      Get.to(PopularBookDetailScreen(
+        storyModel: story,
+      ));
     }
   });
 }
@@ -1000,36 +953,24 @@ Future<void> _configureSelectNotificationSubject() async {
   selectNotificationStream.stream.listen((receive) async {
     print("pay1111----true===${receive}");
 
-    if(receive != null && receive.isNotEmpty){
-
-
+    if (receive != null && receive.isNotEmpty) {
       Map message = json.decode(receive);
       // var message = jsonDecode(receive);
 
-
       print("storyId-------_${message["storyId"]}");
 
-
-      if(message["storyId"]!=null){
-
+      if (message["storyId"] != null) {
         // PrefData.setStoryId(message["storyId"]);
         // PrefData.setIsBack(true);
 
         StoryModel? story = await FireBaseData.fetchStory(message["storyId"]);
 
-
         Get.to(PopularBookDetailScreen(
           storyModel: story!,
         ));
-
-      }
-      else if
-
-      (message["link"]!= null){
+      } else if (message["link"] != null) {
         Constant.launchURL(message["link"]);
       }
-
-
     }
 
     // Map payload = json.decode(receive!);
@@ -1057,69 +998,59 @@ Future<void> _configureSelectNotificationSubject() async {
   // }
 }
 
-
 void requestPermissions() async {
   if (Platform.isIOS || Platform.isMacOS) {
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-        IOSFlutterLocalNotificationsPlugin>()
+            IOSFlutterLocalNotificationsPlugin>()
         ?.requestPermissions(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
+          alert: true,
+          badge: true,
+          sound: true,
+        );
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-        MacOSFlutterLocalNotificationsPlugin>()
+            MacOSFlutterLocalNotificationsPlugin>()
         ?.requestPermissions(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
+          alert: true,
+          badge: true,
+          sound: true,
+        );
   }
-
 
   if (Platform.isAndroid) {
     final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
-    flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>();
+        flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>();
 
     // ignore: unused_local_variable
-    final bool? granted = await androidImplementation?.requestNotificationsPermission();
-
+    final bool? granted =
+        await androidImplementation?.requestNotificationsPermission();
   }
-
 }
 
 // AppLifecycleState? _notification;
 
-
 // ignore: must_be_immutable
 class MyApp extends StatefulWidget {
   RemoteMessage? message;
-  MyApp({super.key,this.message});
+  MyApp({super.key, this.message});
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
-
-class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
-
-
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   // This widget is the root of your application.
 
   @override
   Widget build(BuildContext context) {
-
-    if(!kIsWeb){
-
+    if (!kIsWeb) {
       requestPermissions();
 
       _configureSelectNotificationSubject();
 
       // _configureDidReceiveLocalNotificationSubject();
-
     }
 
     return GetMaterialApp(
@@ -1157,39 +1088,28 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
     // });
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-
-
       print("message------$message");
-
-
 
       print("background2222===true");
 
       Future.delayed(Duration.zero, () {
-
 //       FirebaseService._localNotificationsPlugin.cancelAll();
 //       FirebaseService.showNotification(message);
 
         flutterLocalNotificationsPlugin.cancelAll();
 
-
-
-
-        if(message.notification!=null && message.notification!.android!=null){
-
-
-        if (message.notification!.android!.imageUrl!=null &&
-            message.notification!.android!.imageUrl!.isNotEmpty) {
-          _showNotificationWithImage(message);
-        } else {
-          _showNotification(message);
+        if (message.notification != null &&
+            message.notification!.android != null) {
+          if (message.notification!.android!.imageUrl != null &&
+              message.notification!.android!.imageUrl!.isNotEmpty) {
+            _showNotificationWithImage(message);
+          } else {
+            _showNotification(message);
+          }
         }
-        }
-
 
         _configureSelectNotificationSubject();
         _configureDidReceiveLocalNotificationSubject();
-
       });
 
       // if(message.notification!.android!.imageUrl!.isNotEmpty && message.notification!.android!.imageUrl != null){
@@ -1197,7 +1117,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
       // }else{
       //   _showNotification(message);
       // }
-
     });
 
     // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
@@ -1224,7 +1143,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
     // });
   }
 
-
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
@@ -1245,10 +1163,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
         print("app in detached");
         break;
       case AppLifecycleState.hidden:
-        // TODO: Handle this case.
+      // TODO: Handle this case.
     }
   }
-
 
   @override
   void initState() {
@@ -1256,14 +1173,11 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
 
     WidgetsBinding.instance.addObserver(this);
 
-
     // setupInteractedMessage();
 
-
-    if(!kIsWeb){
+    if (!kIsWeb) {
       initInfo();
     }
-
 
     // WidgetsBinding.instance.addPostFrameCallback((_) async {
     //   if (widget.message != null) {
@@ -1301,10 +1215,4 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
 
     print("mess----_${widget.message}");
   }
-
 }
-
-
-
-
-
