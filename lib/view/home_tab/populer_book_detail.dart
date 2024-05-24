@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ebook_app/ads/AdsFile.dart';
+// import 'package:ebook_app/ads/AdsFile.dart';
 import 'package:ebook_app/main.dart';
 import 'package:ebook_app/routes/app_routes.dart';
 import 'package:ebook_app/view/home_tab/trending_books/read_book_screen.dart';
@@ -32,36 +32,30 @@ class _PopularBookDetailScreenState extends State<PopularBookDetailScreen> {
       Get.put(PopulerBookScreenController());
 
   void backClick() {
+    Future.delayed(
+      Duration.zero,
+      () async {
+        String isBack = await PrefData.getStoryId();
 
-
-    Future.delayed(Duration.zero,() async {
-      String isBack = await PrefData.getStoryId();
-
-      if(isBack.isNotEmpty){
-
-        PrefData.setStoryId('');
-        Constant.sendToNext(context, Routes.homeMainScreenRoute);
-
-      }else{
-        Constant.backToFinish();
-      }
-
-    },);
-
-
-
+        if (isBack.isNotEmpty) {
+          PrefData.setStoryId('');
+          Constant.sendToNext(context, Routes.homeMainScreenRoute);
+        } else {
+          Constant.backToFinish();
+        }
+      },
+    );
   }
 
-  AdsFile adsFile = AdsFile();
+  // AdsFile adsFile = AdsFile();
 
   @override
   void initState() {
     super.initState();
 
-
-    Future.delayed(Duration.zero, () async {
-      await adsFile.createInterstitialAd();
-    });
+    // Future.delayed(Duration.zero, () async {
+    //   await adsFile.createInterstitialAd();
+    // });
 
     Future.delayed(Duration.zero, () async {
       controller.getFavDataList();
@@ -92,14 +86,11 @@ class _PopularBookDetailScreenState extends State<PopularBookDetailScreen> {
     // else if(!kIsWeb && io.Platform.isAndroid) {
     //   return AndroidPage();  //your android page with android package import in it
     // }
-
   }
 
   @override
   Widget build(BuildContext context) {
     initializeScreenSize(context);
-
-
 
     return WillPopScope(
       onWillPop: () async {
@@ -124,14 +115,13 @@ class _PopularBookDetailScreenState extends State<PopularBookDetailScreen> {
                         ? "left_arrow_white.svg"
                         : "back_arrow.svg",
 
-                    rightIcon: popularBookScreenController
-                        .save.value
+                    rightIcon: popularBookScreenController.save.value
                         ? (Get.isDarkMode)
-                        ? "white_fill_save.svg"
-                        : "black_save_fill.svg"
+                            ? "white_fill_save.svg"
+                            : "black_save_fill.svg"
                         : (Get.isDarkMode)
-                        ? "white_border_save_icon.svg"
-                        : "saveIconBlackBorder.svg",
+                            ? "white_border_save_icon.svg"
+                            : "saveIconBlackBorder.svg",
 
                     // rightIcon: Get.isDarkMode
                     //     ? popularBookScreenController.like.value
@@ -145,25 +135,17 @@ class _PopularBookDetailScreenState extends State<PopularBookDetailScreen> {
                       backClick();
                     },
 
-                    rightFunction: (){
+                    rightFunction: () {
                       popularBookScreenController
-                          .checkInBookMarkList(
-                          widget.storyModel);
+                          .checkInBookMarkList(widget.storyModel);
 
                       popularBookScreenController
-                          .checkInBookMark(widget
-                          .storyModel.id ??
-                          "");
+                          .checkInBookMark(widget.storyModel.id ?? "");
 
-                      if (popularBookScreenController
-                          .save.value) {
-                        showCustomToast(
-                            message:
-                            "Mark as Favourite");
+                      if (popularBookScreenController.save.value) {
+                        showCustomToast(message: "Mark as Favourite");
                       } else {
-                        showCustomToast(
-                            message:
-                            "Mark as UnFavourite");
+                        showCustomToast(message: "Mark as UnFavourite");
                       }
                     },
 
@@ -188,7 +170,6 @@ class _PopularBookDetailScreenState extends State<PopularBookDetailScreen> {
                     // },
                     givecolor: context.theme.focusColor,
                   ),
-
                   Expanded(
                     child: Container(
                       color: context.theme.focusColor,
@@ -202,25 +183,25 @@ class _PopularBookDetailScreenState extends State<PopularBookDetailScreen> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-
                                   Container(
                                     height: 337.h,
                                     width: 236.w,
                                     decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(16.r),
-                                        image: getDecorationNetworkImage(context, widget.storyModel.image ?? "",fit: BoxFit.cover)
-                                    ),
+                                        borderRadius:
+                                            BorderRadius.circular(16.r),
+                                        image: getDecorationNetworkImage(
+                                            context,
+                                            widget.storyModel.image ?? "",
+                                            fit: BoxFit.cover)),
                                   )
-
                                 ],
                               ),
                               getVerSpace(20.h),
-                              getCustomFont(
-                                  widget.storyModel.name ?? "",
-                                  24.sp,
-                                  context.theme.primaryColor,
-                                  2,
-                                  fontWeight: FontWeight.w700,textAlign: TextAlign.center).marginSymmetric(horizontal: 20.h),
+                              getCustomFont(widget.storyModel.name ?? "", 24.sp,
+                                      context.theme.primaryColor, 2,
+                                      fontWeight: FontWeight.w700,
+                                      textAlign: TextAlign.center)
+                                  .marginSymmetric(horizontal: 20.h),
                               getVerSpace(8.h),
                               StreamBuilder<QuerySnapshot>(
                                 stream: FireBaseData.getAuthorById(
@@ -233,24 +214,23 @@ class _PopularBookDetailScreenState extends State<PopularBookDetailScreen> {
                                   if (snapshot.data != null &&
                                       snapshot.connectionState ==
                                           ConnectionState.active) {
+                                    List<DocumentSnapshot> list =
+                                        snapshot.data!.docs;
 
-                                    List<DocumentSnapshot> list = snapshot.data!.docs;
-
-                                    String auth = FireBaseData.getAuthorName(author: widget.storyModel.authId!, list: list);
+                                    String auth = FireBaseData.getAuthorName(
+                                        author: widget.storyModel.authId!,
+                                        list: list);
 
                                     // TopAuthors auth =
                                     //     TopAuthors.fromFirestore(
                                     //         snapshot.data!);
 
-                                    return getCustomFont(
-                                        auth,
-                                        16.sp,
-                                        grey,
-                                        2,
-                                        fontWeight: FontWeight.w400,textAlign: TextAlign.center).marginSymmetric(horizontal: 20.h);
+                                    return getCustomFont(auth, 16.sp, grey, 2,
+                                            fontWeight: FontWeight.w400,
+                                            textAlign: TextAlign.center)
+                                        .marginSymmetric(horizontal: 20.h);
                                   } else {
-                                    return getCustomFont(
-                                        "", 16.sp, grey, 1,
+                                    return getCustomFont("", 16.sp, grey, 1,
                                         fontWeight: FontWeight.w400);
                                   }
                                 },
@@ -382,13 +362,10 @@ class _PopularBookDetailScreenState extends State<PopularBookDetailScreen> {
                               HtmlWidget(
                                 decode(widget.storyModel.desc ?? ""),
                                 textStyle: TextStyle(
-                                  color: context.theme.primaryColor,
-                                  fontSize: 16.h,
-                                  fontWeight: FontWeight.w400,
-                                  height: 1.5.h
-
-                                ),
-
+                                    color: context.theme.primaryColor,
+                                    fontSize: 16.h,
+                                    fontWeight: FontWeight.w400,
+                                    height: 1.5.h),
                               ).paddingSymmetric(horizontal: 20.h),
                               // getMultilineCustomFont(
                               //         removeAllHtmlTags(
@@ -439,14 +416,19 @@ class _PopularBookDetailScreenState extends State<PopularBookDetailScreen> {
                           return Column(
                             children: [
                               getVerSpace(10.h),
-                              getShimmerWidget(context, Container(
-                                height: 337.h,
-                                width: 236.w,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(16.r),
-                                    image: getDecorationNetworkImage(context, widget.storyModel.image ?? "",fit: BoxFit.cover)
-                                ),
-                              )),
+                              getShimmerWidget(
+                                  context,
+                                  Container(
+                                    height: 337.h,
+                                    width: 236.w,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(16.r),
+                                        image: getDecorationNetworkImage(
+                                            context,
+                                            widget.storyModel.image ?? "",
+                                            fit: BoxFit.cover)),
+                                  )),
 
                               getVerSpace(20.h),
 
@@ -454,17 +436,29 @@ class _PopularBookDetailScreenState extends State<PopularBookDetailScreen> {
                                   context,
                                   Container(
                                     color: Colors.grey,
-                                    child: getShimmerWidget(context, getCustomFont(widget.storyModel.name ?? "", 24.sp,
-                                        context.theme.primaryColor, 1,
-                                        fontWeight: FontWeight.w700)),
+                                    child: getShimmerWidget(
+                                        context,
+                                        getCustomFont(
+                                            widget.storyModel.name ?? "",
+                                            24.sp,
+                                            context.theme.primaryColor,
+                                            1,
+                                            fontWeight: FontWeight.w700)),
                                   )),
                               getVerSpace(5.h),
-                              getShimmerWidget(context, Container(
-                                margin: EdgeInsets.symmetric(horizontal: 20.h),
-                                color: Colors.grey,
-                                child: getCustomFont(widget.storyModel.authId.toString(), 16.sp, grey, 1,
-                                    fontWeight: FontWeight.w400),
-                              )),
+                              getShimmerWidget(
+                                  context,
+                                  Container(
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 20.h),
+                                    color: Colors.grey,
+                                    child: getCustomFont(
+                                        widget.storyModel.authId.toString(),
+                                        16.sp,
+                                        grey,
+                                        1,
+                                        fontWeight: FontWeight.w400),
+                                  )),
                               getVerSpace(20.h),
                               // Container(
                               //   height: 56.h,
@@ -562,20 +556,22 @@ class _PopularBookDetailScreenState extends State<PopularBookDetailScreen> {
                               //   ).paddingSymmetric(horizontal: 20.h),
                               // ),
                               getVerSpace(20.h),
-                              getShimmerWidget(context, Container(
-                                margin: EdgeInsets.symmetric(horizontal: 20.h),
-                                color: Colors.grey,
-                                child: getMultilineCustomFont(
-
-                                    removeAllHtmlTags(
-                                        widget.storyModel.desc ?? ""),
-
-                                    16.h,
-                                    context.theme.primaryColor,
-                                    fontWeight: FontWeight.w400,
-                                    textAlign: TextAlign.center,
-                                    txtHeight: 1.5.h).paddingSymmetric(horizontal: 20.h),
-                              )),
+                              getShimmerWidget(
+                                  context,
+                                  Container(
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 20.h),
+                                    color: Colors.grey,
+                                    child: getMultilineCustomFont(
+                                            removeAllHtmlTags(
+                                                widget.storyModel.desc ?? ""),
+                                            16.h,
+                                            context.theme.primaryColor,
+                                            fontWeight: FontWeight.w400,
+                                            textAlign: TextAlign.center,
+                                            txtHeight: 1.5.h)
+                                        .paddingSymmetric(horizontal: 20.h),
+                                  )),
                               getVerSpace(20.h),
                               // Row(
                               //   mainAxisAlignment:
@@ -616,22 +612,24 @@ class _PopularBookDetailScreenState extends State<PopularBookDetailScreen> {
                       }),
                     ),
                   ),
-
                   Obx(() {
-                    if(networkManager.isNetwork.value){
+                    if (networkManager.isNetwork.value) {
                       return getCustomReadButton("Read Book", () {
                         if (kIsWeb) {
-                          Constant.sendToNextWithResult(context,
-                              ReadBookScreen(storyModel: widget.storyModel), () {});
+                          Constant.sendToNextWithResult(
+                              context,
+                              ReadBookScreen(storyModel: widget.storyModel),
+                              () {});
                         } else {
-                          adsFile.showInterstitialAd(() {
-                            Constant.sendToNextWithResult(
-                                context,
-                                ReadBookScreen(storyModel: widget.storyModel),
-                                    () {});
+                          // adsFile.showInterstitialAd(() {
+                          Constant.sendToNextWithResult(
+                              context,
+                              ReadBookScreen(storyModel: widget.storyModel),
+                              () {});
 
-                            // Constant.sendToNextWithResult(context, CustomSearchPdfViewer(), (){});
-                          });
+                          // Constant.sendToNextWithResult(context, CustomSearchPdfViewer(), (){});
+                          // }
+                          // );
                         }
                         // Constant.launchURL(widget.storyModel.pdf!);
 
@@ -639,13 +637,17 @@ class _PopularBookDetailScreenState extends State<PopularBookDetailScreen> {
                         // html.Url.revokeObjectUrl(url);
 
                         // Constant.sendToNextWithResult(context, SubscriptionScreen(storyModel: widget.storyModel),(value){});
-                      },isIcon: true).paddingOnly(
-                          left: 20.h, right: 20.h, bottom: 20.h, top: 24.h);
-                    }else{
-                      return getShimmerWidget(context, getCustomButton("Read Book", () {
-
-                      }).paddingOnly(
-                          left: 20.h, right: 20.h, bottom: 20.h, top: 24.h));
+                      }, isIcon: true)
+                          .paddingOnly(
+                              left: 20.h, right: 20.h, bottom: 20.h, top: 24.h);
+                    } else {
+                      return getShimmerWidget(
+                          context,
+                          getCustomButton("Read Book", () {}).paddingOnly(
+                              left: 20.h,
+                              right: 20.h,
+                              bottom: 20.h,
+                              top: 24.h));
                     }
                   })
                 ],

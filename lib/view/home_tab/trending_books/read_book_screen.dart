@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:isolate';
 import 'dart:ui';
-import 'package:ebook_app/ads/AdsFile.dart';
+// import 'package:ebook_app/ads/AdsFile.dart';
 import 'package:ebook_app/datafile/firebase_data/firebasedata.dart';
 import 'package:ebook_app/main.dart';
 import 'package:ebook_app/utils/pref_data.dart';
@@ -23,8 +23,6 @@ import '../../../utils/color_category.dart';
 import '../../../utils/constant.dart';
 import '../../../utils/constantWidget.dart';
 
-
-
 // ignore: must_be_immutable
 class ReadBookScreen extends StatefulWidget {
   StoryModel storyModel;
@@ -38,21 +36,17 @@ class ReadBookScreen extends StatefulWidget {
 }
 
 class _ReadBookScreenState extends State<ReadBookScreen> {
-
   // final GlobalKey<SfPdfViewerState> _pdfViewerKey = GlobalKey();
 
   TextEditingController searchController = TextEditingController();
 
-
   PdfControllerPinch? pdfPinchController;
-
 
   addViewStory() {
     Future.delayed(Duration.zero, () async {
       FireBaseData.addStoryViews(widget.storyModel, context);
     });
   }
-
 
   // addViewAuthor() {
   //   DocumentSnapshot doc = FireBaseData.getAuthorById(id: widget.storyModel.authId ?? "");
@@ -62,18 +56,15 @@ class _ReadBookScreenState extends State<ReadBookScreen> {
   //   });
   // }
 
-
   ReadBookScreenController readBookScreenController =
-  Get.put(ReadBookScreenController());
+      Get.put(ReadBookScreenController());
 
   void backClick() {
-    if(isSearch.value){
+    if (isSearch.value) {
       isSearch.value = false;
-    }else{
+    } else {
       Constant.backToFinish();
     }
-
-
   }
 
   List<FileSystemEntity> files = [];
@@ -105,9 +96,9 @@ class _ReadBookScreenState extends State<ReadBookScreen> {
 
   RxBool isDownloaded = false.obs;
 
-  Future<void> requestDownload(String url, String name,String image) async {
+  Future<void> requestDownload(String url, String name, String image) async {
     final dir =
-    await getApplicationDocumentsDirectory(); //From path_provider package
+        await getApplicationDocumentsDirectory(); //From path_provider package
     var localPath = dir.path + Constant.saveDirectory;
     final savedDir = Directory(localPath);
 
@@ -135,11 +126,7 @@ class _ReadBookScreenState extends State<ReadBookScreen> {
     for (int i = 0; i < files.length; i++) {
       print("i-------$i");
 
-      String basename = files
-          .elementAt(i)
-          .path
-          .split("/")
-          .last;
+      String basename = files.elementAt(i).path.split("/").last;
 
       print("basename----$basename");
 
@@ -158,41 +145,37 @@ class _ReadBookScreenState extends State<ReadBookScreen> {
   // PdfBookmark? pdfBookmark;
   // PdfViewerController pdfViewerController = PdfViewerController();
 
-
-  AdsFile adsFile = AdsFile();
-
+  // AdsFile adsFile = AdsFile();
 
   @override
   void initState() {
     super.initState();
 
     // pdfBookmark = PdfDocument(inputBytes: _pdfBytes).bookmarks.add("tails");
-    Future.delayed(Duration.zero,() {
-      adsFile.createRewardedAd();
-    },);
+    // Future.delayed(Duration.zero,() {
+    //   adsFile.createRewardedAd();
+    // },);
 
     getBytes();
 
-
     pdfPinchController = PdfControllerPinch(
-      document: PdfDocument.openData(InternetFile.get(widget.storyModel.pdf ?? "")),
+      document:
+          PdfDocument.openData(InternetFile.get(widget.storyModel.pdf ?? "")),
     );
 
     // _pdfViewerController = ;
     // _searchResult = ;
 
-
     if (!kIsWeb) {
       getFiles();
 
-      IsolateNameServer.registerPortWithName(port.sendPort, 'downloader_send_port');
+      IsolateNameServer.registerPortWithName(
+          port.sendPort, 'downloader_send_port');
       port.listen((dynamic data) {
-
-        setState((){ });
+        setState(() {});
       });
 
       FlutterDownloader.registerCallback(downloadCallback);
-
     }
 
     PrefData.setRecentReadBook(widget.storyModel.pdf ?? "");
@@ -203,12 +186,12 @@ class _ReadBookScreenState extends State<ReadBookScreen> {
     addViewStory();
 
     // addViewAuthor();
-
   }
 
   @pragma('vm:entry-point')
   static void downloadCallback(String id, int status, int progress) {
-    final SendPort? send = IsolateNameServer.lookupPortByName('downloader_send_port');
+    final SendPort? send =
+        IsolateNameServer.lookupPortByName('downloader_send_port');
     send!.send([id, status, progress]);
   }
 
@@ -226,21 +209,19 @@ class _ReadBookScreenState extends State<ReadBookScreen> {
     super.dispose();
   }
 
-
   Uint8List? _pdfBytes;
 
   void getBytes() async {
     // if(!kIsWeb)
     // {await Firebase.initializeApp();}
     FirebaseStorage storage =
-    FirebaseStorage.instanceFor(
-        bucket: 'e-book-a4896.appspot.com');
+        FirebaseStorage.instanceFor(bucket: 'e-book-a4896.appspot.com');
     // bucket: 'flutterfirebase-6c279.appspot.com');
     Reference pdfRef = storage.refFromURL(widget.storyModel.pdf ?? "");
     // refFromURL('https://firebasestorage.googleapis.com/v0/b/flutterfirebase-6c279.appspot.com/o/GIS.pdf?alt=media&token=51654170-c140-4ffa-ae1a-9fb431d0dee2');//ref('GIS.pdf');
     await pdfRef.getDownloadURL().then((value) => print(""));
-    await pdfRef.getData(104857600).then((
-        value) { //size mentioned here is max size to download from firebase.
+    await pdfRef.getData(104857600).then((value) {
+      //size mentioned here is max size to download from firebase.
       _pdfBytes = value;
 
       print("pdfBytes---${_pdfBytes!.length}");
@@ -250,9 +231,7 @@ class _ReadBookScreenState extends State<ReadBookScreen> {
 
   RxBool isSearch = false.obs;
 
-
-  find(){
-
+  find() {
     // print("text-----${searchController.text}");
     // searchResult = pdfPinchController.searchText(
     //     searchController.text,
@@ -271,10 +250,8 @@ class _ReadBookScreenState extends State<ReadBookScreen> {
     //   });
     // }
   }
-  
-  
-  RxBool isPdfLoad = false.obs;
 
+  RxBool isPdfLoad = false.obs;
 
   @override
   Widget build(BuildContext context) {
@@ -303,501 +280,496 @@ class _ReadBookScreenState extends State<ReadBookScreen> {
         backgroundColor: context.theme.scaffoldBackgroundColor,
         body: SafeArea(
             child: getDefaultWidget(Column(
-              children: [
+          children: [
+            // getCustumAppbar(
+            //     leftIcon: Get.isDarkMode
+            //         ? "left_arrow_white.svg"
+            //         : "back_arrow.svg",
+            //     rightIcon: Get.isDarkMode
+            //         ? "white_download.svg"
+            //         : "download_icon.svg",
+            //     title: widget.storyModel.name ?? "",
+            //     leftFunction: () {
+            //       backClick();
+            //     },
+            //     rightPermission: (!isDownloaded.value && !kIsWeb),
+            //     rightFunction: () async {
+            //       print("called0------Download");
+            //
+            //       requestDownload(widget.storyModel.pdf ?? "",
+            //           widget.storyModel.name ?? "");
+            //
+            //       // downloadFile();
+            //       // downloadFile(0,widget.storyModel.pdf ?? "",1);
+            //     },
+            //     givecolor: context.theme.focusColor,
+            //     titlecolor: context.theme.primaryColor),
 
+            Container(
+              color: context.theme.focusColor,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  GestureDetector(
+                      onTap: () {
+                        backClick();
+                      },
+                      child: getSvgImage(Get.isDarkMode
+                          ? "left_arrow_white.svg"
+                          : "back_arrow.svg")),
 
-                // getCustumAppbar(
-                //     leftIcon: Get.isDarkMode
-                //         ? "left_arrow_white.svg"
-                //         : "back_arrow.svg",
-                //     rightIcon: Get.isDarkMode
-                //         ? "white_download.svg"
-                //         : "download_icon.svg",
-                //     title: widget.storyModel.name ?? "",
-                //     leftFunction: () {
-                //       backClick();
-                //     },
-                //     rightPermission: (!isDownloaded.value && !kIsWeb),
-                //     rightFunction: () async {
-                //       print("called0------Download");
-                //
-                //       requestDownload(widget.storyModel.pdf ?? "",
-                //           widget.storyModel.name ?? "");
-                //
-                //       // downloadFile();
-                //       // downloadFile(0,widget.storyModel.pdf ?? "",1);
-                //     },
-                //     givecolor: context.theme.focusColor,
-                //     titlecolor: context.theme.primaryColor),
-
-                Container(
-                  color: context.theme.focusColor,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      GestureDetector(
-                          onTap: () {
-                            backClick();
-                          },
-                          child: getSvgImage(Get.isDarkMode
-                              ? "left_arrow_white.svg"
-                              : "back_arrow.svg")),
-
-                      Expanded(
-                        flex: 1,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              flex: 1,
-                              child: getCustomFont(
-                                  widget.storyModel.name ?? "", 24.sp,
-                                  Get.isDarkMode
-                                      ? regularWhite
-                                      : regularBlack, 2,
-                                  fontWeight: FontWeight.w700,
-                                  textAlign: TextAlign.center),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      GestureDetector(onTap: (){
-
-                        Future.delayed(Duration.zero,() {
-                          adsFile.createRewardedAd();
-                        },);
-
-                        Get.dialog(
-                          
-                          barrierDismissible: false,
-                            
-                            AlertDialog(
-                              backgroundColor: context.theme.dialogBackgroundColor,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20.r))),
-                          content: Container(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                getProgressWidget(context),
-                                getCustomFont("Ads Loading...", 18.sp, context.theme.primaryColor, 1)
-                              ],
-                            ),
-                          ),
-                        ));
-
-                        Timer(Duration(seconds: 3), () {
-                          Constant.backToFinish();
-
-                          // requestDownload(widget.storyModel.pdf ?? "",
-                          //     widget.storyModel.name ?? "",widget.storyModel.image ?? "");
-                            Future.delayed(Duration.zero,() {
-                              adsFile.showRewardedAd((){
-                                requestDownload(widget.storyModel.pdf ?? "",
-                                    widget.storyModel.name ?? "",widget.storyModel.image ?? "");
-                              },(){});
-                            },);
-                        });
-
-                        },child: getSvgImage("download.svg",height: 24.h,width: 24.h,color: Get.isDarkMode
-                          ? regularWhite
-                          : regularBlack))
-
-                        // },child: Icon(Icons.file_download_outlined,color: context.theme.primaryColor,size: 28.h,))
-
-
-                      // PopupMenuButton(
-                      //     shape: RoundedRectangleBorder(
-                      //         borderRadius:
-                      //         BorderRadius.circular(12.h)),
-                      //     child: getSvgImage("mor_vert_rounded.svg",
-                      //         height: 24.h, width: 24.h),
-                      //     itemBuilder:
-                      //         (BuildContext context) =>
-                      //     <PopupMenuEntry>[
-                      //       // PopupMenuItem(
-                      //       //   value: 1,
-                      //       //   child: GestureDetector(
-                      //       //       onTap: () {
-                      //       //
-                      //       //         Constant.backToFinish();
-                      //       //
-                      //       //         isSearch.value = true;
-                      //       //
-                      //       //         // Constant.sendToNext(context, Routes.editCategoriesScreenRoute);
-                      //       //       },
-                      //       //       child: getCustomFont("Find...", 16.sp,
-                      //       //           context.theme.primaryColor, 1,
-                      //       //           fontWeight: FontWeight.w500)
-                      //       //   ),
-                      //       // ),
-                      //       PopupMenuItem(
-                      //         value: 2,
-                      //         child: GestureDetector(
-                      //             onTap: () {
-                      //
-                      //               Constant.backToFinish();
-                      //
-                      //               if(networkManager.isNetwork.value){
-                      //                 adsFile.showRewardedAd((){
-                      //                   requestDownload(widget.storyModel.pdf ?? "",
-                      //                       widget.storyModel.name ?? "");
-                      //                 }, (){});
-                      //               }else{
-                      //                 showCustomToast(message: "Please connect to Internet");
-                      //               }
-                      //
-                      //
-                      //
-                      //
-                      //               // getDeleteDialogueFormate("Are you sure you want to delete category!",context.theme.primaryColor, (){}, (){backClick();});
-                      //             },
-                      //             child: getCustomFont("Download", 16.sp,
-                      //                 context.theme.primaryColor, 1,
-                      //                 fontWeight: FontWeight.w500)
-                      //         ),
-                      //       ),
-                      //
-                      //
-                      //       // PopupMenuItem(
-                      //       //   value: 3,
-                      //       //   child: GestureDetector(
-                      //       //       onTap: () {
-                      //       //
-                      //       //         print("open---book");
-                      //       //
-                      //       //         Constant.backToFinish();
-                      //       //
-                      //       //
-                      //       //
-                      //       //         _pdfViewerKey.currentState?.openBookmarkView();
-                      //       //
-                      //       //         //
-                      //       //         // adsFile.showRewardedAd((){
-                      //       //         //   requestDownload(widget.storyModel.pdf ?? "",
-                      //       //         //       widget.storyModel.name ?? "");
-                      //       //         // }, (){});
-                      //       //
-                      //       //
-                      //       //       },
-                      //       //       child: getCustomFont("BookMark", 16.sp,
-                      //       //           context.theme.primaryColor, 1,
-                      //       //           fontWeight: FontWeight.w500)
-                      //       //   ),
-                      //       // ),
-                      //
-                      //
-                      //     ])
-                    ],
-                  ).paddingSymmetric(horizontal: 20.h, vertical: 20.h),
-                ),
-
-                // getVerSpace((isSearch.value)?20.h:0.h),
-
-
-                // IconButton(
-                //   icon: Icon(
-                //     Icons. bookmark,
-                //     color: Colors.black26,
-                //   ),
-                //   // onPressed: _addBookmarksToPDF,
-                //   onPressed: () {
-                //
-                //     print("callled-------bookmark");
-                //
-                //     // pdfBookmark = PdfDocument(inputBytes: _pdfBytes).bookmarks.add("Table Of Contents");
-                //
-                //     if(pdfBookmark!.title.isNotEmpty){
-                //
-                //       print("Pdf-------${pdfBookmark!.title}");
-                //       pdfViewerController.jumpToBookmark(pdfBookmark!);
-                //       // pdfViewerController.jumpToPage(5);
-                //     }
-                //     // else{
-                //
-                //       // showCustomToast(context: context, message: "BookMark Not Available");
-                //       // pdfViewerController.jumpToBookmark(pdfBookmark!);
-                //     // }
-                //
-                //     //
-                //   },
-                // ),
-
-                Obx(() => (isSearch.value)
-                    ? Container(
-                  height: 40.h,
-                  margin: EdgeInsets.only(left: 100.h, right: 20.h),
-                  child: Expanded(
+                  Expanded(
                     flex: 1,
-                    child: Container(
-                      height: 40.h,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5.h), color: Get.isDarkMode?regularBlack:regularWhite),
-                      child: TextFormField(
-                        maxLines: 1,
-                        controller: searchController,
-                        onChanged: (value) {
-                          find();
-                        },
-                        onFieldSubmitted: (value) {
-                          find();
-                        },
-                        decoration: InputDecoration(
-                            suffixIcon: Expanded(
-                              flex: 1,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-
-                                  // Visibility(
-                                  //   // visible: true,
-                                  //   visible: searchResult.hasResult,
-                                  //   child: IconButton(
-                                  //     icon: Icon(
-                                  //       Icons.keyboard_arrow_up,
-                                  //       // color: Colors.white,
-                                  //     ),
-                                  //     onPressed: () {
-                                  //       searchResult.previousInstance();
-                                  //     },
-                                  //   ),
-                                  // ),
-                                  // Visibility(
-                                  //   // visible: true,
-                                  //   visible: searchResult.hasResult,
-                                  //   child: IconButton(
-                                  //     icon: Icon(
-                                  //       Icons.keyboard_arrow_down,
-                                  //       // color: Colors.white,
-                                  //     ),
-                                  //     onPressed: () {
-                                  //       searchResult.nextInstance();
-                                  //     },
-                                  //   ),
-                                  // ),
-                                  // GestureDetector(
-                                  //   onTap: (){
-                                  //
-                                  //     isSearch.value = false;
-                                  //
-                                  //     searchController.text = "";
-                                  //
-                                  //     searchResult.clear();
-                                  //   },
-                                  //   child: Icon(
-                                  //     Icons.clear, size: 18.h,).marginOnly(right: 10.h),
-                                  // ),
-                                ],
-                              ),
-                            ),
-                            hintText: "Find...",
-                            hintStyle: TextStyle(
-                                color: grey,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 15.h,
-                                fontFamily: Constant.fontsFamily),
-                            filled: true,
-                            fillColor: Colors.transparent,
-                            contentPadding: EdgeInsets.only(left: 16.h, top: 0.h),
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5.h),
-                                borderSide: BorderSide(color: grey)),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5.h),
-                                borderSide: BorderSide(color: maximumOrange))),
-                      ),
-                    ),
-
-
-
-                    // getTextField(
-                    // Colors.transparent, "Find...",
-                    // suffixIconPermission: true,
-                    // controller: searchController,
-                    //
-                    // onChanged: (value) {
-                    //   find();
-                    // },
-                    //
-                    // suffixWidget: Expanded(
-                    //   flex: 1,
-                    //   child: Row(
-                    //     mainAxisAlignment: MainAxisAlignment.end,
-                    //     mainAxisSize: MainAxisSize.min,
-                    //     children: [
-                    //
-                    //       Visibility(
-                    //         visible: true,
-                    //         // visible: searchResult.hasResult,
-                    //         child: IconButton(
-                    //           icon: Icon(
-                    //             Icons.keyboard_arrow_up,
-                    //             // color: Colors.white,
-                    //           ),
-                    //           onPressed: () {
-                    //             searchResult.previousInstance();
-                    //           },
-                    //         ),
-                    //       ),
-                    //       Visibility(
-                    //         visible: true,
-                    //         // visible: searchResult.hasResult,
-                    //         child: IconButton(
-                    //           icon: Icon(
-                    //             Icons.keyboard_arrow_down,
-                    //             // color: Colors.white,
-                    //           ),
-                    //           onPressed: () {
-                    //             searchResult.nextInstance();
-                    //           },
-                    //         ),
-                    //       ),
-                    //       GestureDetector(
-                    //         onTap: (){
-                    //
-                    //         },
-                    //         child: Icon(
-                    //           Icons.clear, size: 18.h,).marginOnly(right: 10.h),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-                    // )
-                  ),
-                )
-                    : SizedBox(),),
-
-                getVerSpace((isSearch.value)?20.h:0.h),
-
-
-                // AppBar(
-                //
-                //   title: getCustomFont(
-                //       widget.storyModel.name ?? "", 24.sp, regularBlack,
-                //       1,
-                //       fontWeight: FontWeight.w700,
-                //       textAlign: TextAlign.center),
-                //
-                //
-                //   actions: [
-                //     IconButton(
-                //       icon: Icon(
-                //         Icons.search,
-                //         color: Colors.white,
-                //       ),
-                //       onPressed: () {
-                //         searchResult = pdfViewerController.searchText(
-                //             'the',
-                //             searchOption: TextSearchOption.caseSensitive);
-                //         if (kIsWeb) {
-                //           setState(() {});
-                //         } else {
-                //           searchResult.addListener(() {
-                //             if (searchResult.hasResult) {
-                //               setState(() {});
-                //             }
-                //           });
-                //         }
-                //       },
-                //     ),
-                //
-                //   ],
-                // ),
-
-
-                // SearchToolbar(controller: controller, onTap: onTap)
-
-
-                getVerSpace(20.h),
-                Expanded(
-                  child: Container(
-                    height: 500.h,
-                    color: context.theme.focusColor,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      // physics: BouncingScrollPhysics(),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Expanded(
-                            flex: 1,
-                            child: Obx(() {
-                              if(networkManager.isNetwork.value){
-                                // return (_pdfBytes != null)?
-
-
-                                return PdfViewPinch(
-                                  controller: pdfPinchController!,
-                                  onPageChanged: (page) {
-
-                                  },
-                                  builders: PdfViewPinchBuilders<DefaultBuilderOptions>(
-                                    options: DefaultBuilderOptions(
-
-                                      loaderSwitchDuration: Duration(seconds: 1),
-                                      transitionBuilder: SomeWidget.transitionBuilder,
-                                    ),
-                                    documentLoaderBuilder: (context) =>
-                                        getLottieAnimationWidget(),
-                                    pageLoaderBuilder: (context) =>
-                                        getLottieAnimationWidget(),
-                                    errorBuilder: (context, error) => Center(child: Text(error.toString())),
-                                    builder: SomeWidget.builder,
-                                  ),
-                                );
-                                // SfPdfViewer.memory(
-                                //   _pdfBytes!,
-                                //   // "https://firebasestorage.googleapis.com/v0/b/flutterfirebase-6c279.appspot.com/o/GIS.pdf?alt=media&token=51654170-c140-4ffa-ae1a-9fb431d0dee2",
-                                //   // "https://firebasestorage.googleapis.com/v0/b/e-book-a4896.appspot.com/o/uploads%2Ftest.pdf?alt=media&token=79e9bdc1-0f0a-4419-8966-226f06a9ec43" ?? "",
-                                //   // widget.storyModel.pdf ?? "",
-                                //   canShowScrollHead: false,
-                                //   enableDoubleTapZooming: true,
-                                //   key: _pdfViewerKey,
-                                //   onTextSelectionChanged: (details) {
-                                //     print("de-----${details.selectedText}");
-                                //   },
-                                //   controller: pdfViewerController,
-                                //   enableTextSelection: true,
-                                //
-                                //   currentSearchTextHighlightColor: maximumOrange
-                                //       .withOpacity(0.8),
-                                //   otherSearchTextHighlightColor: maximumOrange.withOpacity(0.5),
-                                //
-                                //   onDocumentLoadFailed: (details) {
-                                //     print("details-------${details
-                                //         .description}");
-                                //   },
-                                //
-                                //   onDocumentLoaded: (PdfDocumentLoadedDetails details) async {
-                                //
-                                //     isPdfLoad.value = true;
-                                //
-                                //     pdfBookmark = details.document.bookmarks[2];
-                                //
-                                //     print("pdfBookmark------${pdfBookmark!.title.toString()}");
-                                //   },
-                                // )
-
-
-
-
-                                //     :
-                                //
-                                //
-                                //
-                                //
-                                // Container(color: Colors.green,);
-                              }else{
-                                return getProgressWidget(context);
-                              }
-                            })
-
+                          flex: 1,
+                          child: getCustomFont(
+                              widget.storyModel.name ?? "",
+                              24.sp,
+                              Get.isDarkMode ? regularWhite : regularBlack,
+                              2,
+                              fontWeight: FontWeight.w700,
+                              textAlign: TextAlign.center),
                         ),
                       ],
                     ),
                   ),
-                )
-              ],
-            ))),
+
+                  GestureDetector(
+                      onTap: () {
+                        // Future.delayed(Duration.zero,() {
+                        //   adsFile.createRewardedAd();
+                        // },);
+
+                        Get.dialog(
+                            barrierDismissible: false,
+                            AlertDialog(
+                              backgroundColor:
+                                  context.theme.dialogBackgroundColor,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20.r))),
+                              content: Container(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    getProgressWidget(context),
+                                    getCustomFont("Ads Loading...", 18.sp,
+                                        context.theme.primaryColor, 1)
+                                  ],
+                                ),
+                              ),
+                            ));
+
+                        Timer(Duration(seconds: 3), () {
+                          Constant.backToFinish();
+
+                          requestDownload(
+                              widget.storyModel.pdf ?? "",
+                              widget.storyModel.name ?? "",
+                              widget.storyModel.image ?? "");
+                          // Future.delayed(Duration.zero,() {
+                          //   adsFile.showRewardedAd((){
+                          //     requestDownload(widget.storyModel.pdf ?? "",
+                          //         widget.storyModel.name ?? "",widget.storyModel.image ?? "");
+                          //   },(){});
+                          // },);
+                        });
+                      },
+                      child: getSvgImage("download.svg",
+                          height: 24.h,
+                          width: 24.h,
+                          color: Get.isDarkMode ? regularWhite : regularBlack))
+
+                  // },child: Icon(Icons.file_download_outlined,color: context.theme.primaryColor,size: 28.h,))
+
+                  // PopupMenuButton(
+                  //     shape: RoundedRectangleBorder(
+                  //         borderRadius:
+                  //         BorderRadius.circular(12.h)),
+                  //     child: getSvgImage("mor_vert_rounded.svg",
+                  //         height: 24.h, width: 24.h),
+                  //     itemBuilder:
+                  //         (BuildContext context) =>
+                  //     <PopupMenuEntry>[
+                  //       // PopupMenuItem(
+                  //       //   value: 1,
+                  //       //   child: GestureDetector(
+                  //       //       onTap: () {
+                  //       //
+                  //       //         Constant.backToFinish();
+                  //       //
+                  //       //         isSearch.value = true;
+                  //       //
+                  //       //         // Constant.sendToNext(context, Routes.editCategoriesScreenRoute);
+                  //       //       },
+                  //       //       child: getCustomFont("Find...", 16.sp,
+                  //       //           context.theme.primaryColor, 1,
+                  //       //           fontWeight: FontWeight.w500)
+                  //       //   ),
+                  //       // ),
+                  //       PopupMenuItem(
+                  //         value: 2,
+                  //         child: GestureDetector(
+                  //             onTap: () {
+                  //
+                  //               Constant.backToFinish();
+                  //
+                  //               if(networkManager.isNetwork.value){
+                  //                 adsFile.showRewardedAd((){
+                  //                   requestDownload(widget.storyModel.pdf ?? "",
+                  //                       widget.storyModel.name ?? "");
+                  //                 }, (){});
+                  //               }else{
+                  //                 showCustomToast(message: "Please connect to Internet");
+                  //               }
+                  //
+                  //
+                  //
+                  //
+                  //               // getDeleteDialogueFormate("Are you sure you want to delete category!",context.theme.primaryColor, (){}, (){backClick();});
+                  //             },
+                  //             child: getCustomFont("Download", 16.sp,
+                  //                 context.theme.primaryColor, 1,
+                  //                 fontWeight: FontWeight.w500)
+                  //         ),
+                  //       ),
+                  //
+                  //
+                  //       // PopupMenuItem(
+                  //       //   value: 3,
+                  //       //   child: GestureDetector(
+                  //       //       onTap: () {
+                  //       //
+                  //       //         print("open---book");
+                  //       //
+                  //       //         Constant.backToFinish();
+                  //       //
+                  //       //
+                  //       //
+                  //       //         _pdfViewerKey.currentState?.openBookmarkView();
+                  //       //
+                  //       //         //
+                  //       //         // adsFile.showRewardedAd((){
+                  //       //         //   requestDownload(widget.storyModel.pdf ?? "",
+                  //       //         //       widget.storyModel.name ?? "");
+                  //       //         // }, (){});
+                  //       //
+                  //       //
+                  //       //       },
+                  //       //       child: getCustomFont("BookMark", 16.sp,
+                  //       //           context.theme.primaryColor, 1,
+                  //       //           fontWeight: FontWeight.w500)
+                  //       //   ),
+                  //       // ),
+                  //
+                  //
+                  //     ])
+                ],
+              ).paddingSymmetric(horizontal: 20.h, vertical: 20.h),
+            ),
+
+            // getVerSpace((isSearch.value)?20.h:0.h),
+
+            // IconButton(
+            //   icon: Icon(
+            //     Icons. bookmark,
+            //     color: Colors.black26,
+            //   ),
+            //   // onPressed: _addBookmarksToPDF,
+            //   onPressed: () {
+            //
+            //     print("callled-------bookmark");
+            //
+            //     // pdfBookmark = PdfDocument(inputBytes: _pdfBytes).bookmarks.add("Table Of Contents");
+            //
+            //     if(pdfBookmark!.title.isNotEmpty){
+            //
+            //       print("Pdf-------${pdfBookmark!.title}");
+            //       pdfViewerController.jumpToBookmark(pdfBookmark!);
+            //       // pdfViewerController.jumpToPage(5);
+            //     }
+            //     // else{
+            //
+            //       // showCustomToast(context: context, message: "BookMark Not Available");
+            //       // pdfViewerController.jumpToBookmark(pdfBookmark!);
+            //     // }
+            //
+            //     //
+            //   },
+            // ),
+
+            Obx(
+              () => (isSearch.value)
+                  ? Container(
+                      height: 40.h,
+                      margin: EdgeInsets.only(left: 100.h, right: 20.h),
+                      child: Expanded(
+                        flex: 1,
+                        child: Container(
+                          height: 40.h,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5.h),
+                              color:
+                                  Get.isDarkMode ? regularBlack : regularWhite),
+                          child: TextFormField(
+                            maxLines: 1,
+                            controller: searchController,
+                            onChanged: (value) {
+                              find();
+                            },
+                            onFieldSubmitted: (value) {
+                              find();
+                            },
+                            decoration: InputDecoration(
+                                suffixIcon: Expanded(
+                                  flex: 1,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      // Visibility(
+                                      //   // visible: true,
+                                      //   visible: searchResult.hasResult,
+                                      //   child: IconButton(
+                                      //     icon: Icon(
+                                      //       Icons.keyboard_arrow_up,
+                                      //       // color: Colors.white,
+                                      //     ),
+                                      //     onPressed: () {
+                                      //       searchResult.previousInstance();
+                                      //     },
+                                      //   ),
+                                      // ),
+                                      // Visibility(
+                                      //   // visible: true,
+                                      //   visible: searchResult.hasResult,
+                                      //   child: IconButton(
+                                      //     icon: Icon(
+                                      //       Icons.keyboard_arrow_down,
+                                      //       // color: Colors.white,
+                                      //     ),
+                                      //     onPressed: () {
+                                      //       searchResult.nextInstance();
+                                      //     },
+                                      //   ),
+                                      // ),
+                                      // GestureDetector(
+                                      //   onTap: (){
+                                      //
+                                      //     isSearch.value = false;
+                                      //
+                                      //     searchController.text = "";
+                                      //
+                                      //     searchResult.clear();
+                                      //   },
+                                      //   child: Icon(
+                                      //     Icons.clear, size: 18.h,).marginOnly(right: 10.h),
+                                      // ),
+                                    ],
+                                  ),
+                                ),
+                                hintText: "Find...",
+                                hintStyle: TextStyle(
+                                    color: grey,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 15.h,
+                                    fontFamily: Constant.fontsFamily),
+                                filled: true,
+                                fillColor: Colors.transparent,
+                                contentPadding:
+                                    EdgeInsets.only(left: 16.h, top: 0.h),
+                                enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5.h),
+                                    borderSide: BorderSide(color: grey)),
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5.h),
+                                    borderSide:
+                                        BorderSide(color: maximumOrange))),
+                          ),
+                        ),
+
+                        // getTextField(
+                        // Colors.transparent, "Find...",
+                        // suffixIconPermission: true,
+                        // controller: searchController,
+                        //
+                        // onChanged: (value) {
+                        //   find();
+                        // },
+                        //
+                        // suffixWidget: Expanded(
+                        //   flex: 1,
+                        //   child: Row(
+                        //     mainAxisAlignment: MainAxisAlignment.end,
+                        //     mainAxisSize: MainAxisSize.min,
+                        //     children: [
+                        //
+                        //       Visibility(
+                        //         visible: true,
+                        //         // visible: searchResult.hasResult,
+                        //         child: IconButton(
+                        //           icon: Icon(
+                        //             Icons.keyboard_arrow_up,
+                        //             // color: Colors.white,
+                        //           ),
+                        //           onPressed: () {
+                        //             searchResult.previousInstance();
+                        //           },
+                        //         ),
+                        //       ),
+                        //       Visibility(
+                        //         visible: true,
+                        //         // visible: searchResult.hasResult,
+                        //         child: IconButton(
+                        //           icon: Icon(
+                        //             Icons.keyboard_arrow_down,
+                        //             // color: Colors.white,
+                        //           ),
+                        //           onPressed: () {
+                        //             searchResult.nextInstance();
+                        //           },
+                        //         ),
+                        //       ),
+                        //       GestureDetector(
+                        //         onTap: (){
+                        //
+                        //         },
+                        //         child: Icon(
+                        //           Icons.clear, size: 18.h,).marginOnly(right: 10.h),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
+                        // )
+                      ),
+                    )
+                  : SizedBox(),
+            ),
+
+            getVerSpace((isSearch.value) ? 20.h : 0.h),
+
+            // AppBar(
+            //
+            //   title: getCustomFont(
+            //       widget.storyModel.name ?? "", 24.sp, regularBlack,
+            //       1,
+            //       fontWeight: FontWeight.w700,
+            //       textAlign: TextAlign.center),
+            //
+            //
+            //   actions: [
+            //     IconButton(
+            //       icon: Icon(
+            //         Icons.search,
+            //         color: Colors.white,
+            //       ),
+            //       onPressed: () {
+            //         searchResult = pdfViewerController.searchText(
+            //             'the',
+            //             searchOption: TextSearchOption.caseSensitive);
+            //         if (kIsWeb) {
+            //           setState(() {});
+            //         } else {
+            //           searchResult.addListener(() {
+            //             if (searchResult.hasResult) {
+            //               setState(() {});
+            //             }
+            //           });
+            //         }
+            //       },
+            //     ),
+            //
+            //   ],
+            // ),
+
+            // SearchToolbar(controller: controller, onTap: onTap)
+
+            getVerSpace(20.h),
+            Expanded(
+              child: Container(
+                height: 500.h,
+                color: context.theme.focusColor,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  // physics: BouncingScrollPhysics(),
+                  children: [
+                    Expanded(
+                        flex: 1,
+                        child: Obx(() {
+                          if (networkManager.isNetwork.value) {
+                            // return (_pdfBytes != null)?
+
+                            return PdfViewPinch(
+                              controller: pdfPinchController!,
+                              onPageChanged: (page) {},
+                              builders:
+                                  PdfViewPinchBuilders<DefaultBuilderOptions>(
+                                options: DefaultBuilderOptions(
+                                  loaderSwitchDuration: Duration(seconds: 1),
+                                  transitionBuilder:
+                                      SomeWidget.transitionBuilder,
+                                ),
+                                documentLoaderBuilder: (context) =>
+                                    getLottieAnimationWidget(),
+                                pageLoaderBuilder: (context) =>
+                                    getLottieAnimationWidget(),
+                                errorBuilder: (context, error) =>
+                                    Center(child: Text(error.toString())),
+                                builder: SomeWidget.builder,
+                              ),
+                            );
+                            // SfPdfViewer.memory(
+                            //   _pdfBytes!,
+                            //   // "https://firebasestorage.googleapis.com/v0/b/flutterfirebase-6c279.appspot.com/o/GIS.pdf?alt=media&token=51654170-c140-4ffa-ae1a-9fb431d0dee2",
+                            //   // "https://firebasestorage.googleapis.com/v0/b/e-book-a4896.appspot.com/o/uploads%2Ftest.pdf?alt=media&token=79e9bdc1-0f0a-4419-8966-226f06a9ec43" ?? "",
+                            //   // widget.storyModel.pdf ?? "",
+                            //   canShowScrollHead: false,
+                            //   enableDoubleTapZooming: true,
+                            //   key: _pdfViewerKey,
+                            //   onTextSelectionChanged: (details) {
+                            //     print("de-----${details.selectedText}");
+                            //   },
+                            //   controller: pdfViewerController,
+                            //   enableTextSelection: true,
+                            //
+                            //   currentSearchTextHighlightColor: maximumOrange
+                            //       .withOpacity(0.8),
+                            //   otherSearchTextHighlightColor: maximumOrange.withOpacity(0.5),
+                            //
+                            //   onDocumentLoadFailed: (details) {
+                            //     print("details-------${details
+                            //         .description}");
+                            //   },
+                            //
+                            //   onDocumentLoaded: (PdfDocumentLoadedDetails details) async {
+                            //
+                            //     isPdfLoad.value = true;
+                            //
+                            //     pdfBookmark = details.document.bookmarks[2];
+                            //
+                            //     print("pdfBookmark------${pdfBookmark!.title.toString()}");
+                            //   },
+                            // )
+
+                            //     :
+                            //
+                            //
+                            //
+                            //
+                            // Container(color: Colors.green,);
+                          } else {
+                            return getProgressWidget(context);
+                          }
+                        })),
+                  ],
+                ),
+              ),
+            )
+          ],
+        ))),
       ),
     );
   }
@@ -818,7 +790,6 @@ class _ReadBookScreenState extends State<ReadBookScreen> {
 //       """;
 }
 
-
 class SaveFile {
   static Future<void> saveAndLaunchFile(
       List<int> bytes, String fileName) async {
@@ -837,18 +808,16 @@ class SaveFile {
 
 class SomeWidget {
   static Widget builder(
-      BuildContext context,
-      PdfViewPinchBuilders builders,
-      PdfLoadingState state,
-      WidgetBuilder loadedBuilder,
-      PdfDocument? document,
-      Exception? loadingError,
-      ) {
+    BuildContext context,
+    PdfViewPinchBuilders builders,
+    PdfLoadingState state,
+    WidgetBuilder loadedBuilder,
+    PdfDocument? document,
+    Exception? loadingError,
+  ) {
     final Widget content = () {
       switch (state) {
         case PdfLoadingState.loading:
-
-
           return KeyedSubtree(
             key: const Key('pdfx.root.loading'),
             child: builders.documentLoaderBuilder?.call(context) ??
@@ -869,7 +838,7 @@ class SomeWidget {
     }();
 
     final defaultBuilder =
-    builders as PdfViewPinchBuilders<DefaultBuilderOptions>;
+        builders as PdfViewPinchBuilders<DefaultBuilderOptions>;
     final options = defaultBuilder.options;
 
     return AnimatedSwitcher(
@@ -883,26 +852,20 @@ class SomeWidget {
       FadeTransition(opacity: animation, child: child);
 
   static PhotoViewGalleryPageOptions pageBuilder(
-      BuildContext context,
-      Future<PdfPageImage> pageImage,
-      int index,
-      PdfDocument document,
-      ) =>
+    BuildContext context,
+    Future<PdfPageImage> pageImage,
+    int index,
+    PdfDocument document,
+  ) =>
       PhotoViewGalleryPageOptions(
         imageProvider: PdfPageImageProvider(
           pageImage,
           index,
           document.id,
         ),
-
-
         minScale: PhotoViewComputedScale.contained * 1,
         maxScale: PhotoViewComputedScale.contained * 3.0,
         initialScale: PhotoViewComputedScale.contained * 1.0,
         heroAttributes: PhotoViewHeroAttributes(tag: '${document.id}-$index'),
-
       );
 }
-
-
-
